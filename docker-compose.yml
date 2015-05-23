@@ -1,0 +1,59 @@
+ambassador:
+    image: cpuguy83/docker-grand-ambassador
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    command: "--name example_user_1 --name example_switch_1 --name example_rule_1"
+
+postgres:
+  image: postgres
+  ports:
+    - "5432:5432"
+redis:
+  image: redis
+  ports:
+    - "6379:6379"
+
+user:
+  name: user
+  hostname: user
+  build: docker
+  command:
+  volumes:
+    - user:/app
+  ports:
+    - "80:80"
+  links:
+    - postgres
+    - redis
+    - "ambassador:example_switch_1"
+    - "ambassador:example_rule_1"
+
+switch:
+  name: switch
+  hostname: switch
+  build: docker
+  command:
+  volumes:
+    - switch:/app
+  ports:
+    - "8000:8000"
+  links:
+    - postgres
+    - redis
+    - "ambassador:example_user_1"
+    - "ambassador:example_rule_1"
+
+rule:
+  name: rule
+  hostname: rule
+  build: docker
+  command:
+  volumes:
+    - rule:/app
+  ports:
+    - "8001:8001"
+  links:
+    - postgres
+    - redis
+    - "ambassador:example_switch_1"
+    - "ambassador:example_user_1"
