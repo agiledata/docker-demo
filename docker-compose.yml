@@ -2,7 +2,7 @@ ambassador:
     image: cpuguy83/docker-grand-ambassador
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-    command: "--name example_user_1 --name example_switch_1 --name example_rule_1"
+    command: "--name dockerdemo_user_1 --name dockerdemo_switch_1 --name dockerdemo_rule_1"
 
 postgres:
   image: postgres
@@ -25,8 +25,8 @@ user:
   links:
     - postgres
     - redis
-    - "ambassador:example_switch_1"
-    - "ambassador:example_rule_1"
+    - "ambassador:dockerdemo_switch_1"
+    - "ambassador:dockerdemo_rule_1"
 
 switch:
   name: switch
@@ -40,8 +40,8 @@ switch:
   links:
     - postgres
     - redis
-    - "ambassador:example_user_1"
-    - "ambassador:example_rule_1"
+    - "ambassador:dockerdemo_user_1"
+    - "ambassador:dockerdemo_rule_1"
 
 rule:
   name: rule
@@ -55,5 +55,5 @@ rule:
   links:
     - postgres
     - redis
-    - "ambassador:example_switch_1"
-    - "ambassador:example_user_1"
+    - "ambassador:dockerdemo_switch_1"
+    - "ambassador:dockerdemo_user_1"
